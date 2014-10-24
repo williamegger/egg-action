@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Egg Action</title>
+<style type="text/css">
+html, body {
+	background-color: #EEEEEE;
+	color: #333333;
+}
+form {
+	margin: 10px;
+	padding: 20px;
+	border: 1px solid #AAAAAA;
+	width: 500px;
+	line-height: 28px;
+}
+form h3 {
+	margin: 0px;
+}
+</style>
+</head>
+<body>
+	<h1>Egg Action</h1>
+	
+	<div>
+		<form action="/egg-action/api/user/index" target="_respage">
+			<h3>User - index()</h3>
+			<input type="submit" value="submit" />
+		</form>
+	</div>
+	<div>
+		<form action="/egg-action/api/user/view" target="_respage">
+			<h3>User - view()</h3>
+			uid : <input type="text" name="uid" value="1" /><br/>
+			<input type="submit" value="submit" />
+		</form>
+	</div>
+	<div>
+		<form action="/egg-action/api/user/mustPost" method="post" target="_respage">
+			<h3>User - mustPost()</h3>
+			<input type="submit" value="submit" />
+		</form>
+	</div>
+	<div>
+		<form action="/egg-action/api/user/setHead" method="post" enctype="multipart/form-data" target="_respage">
+			<h3>User - setHead()</h3>
+			Image : <input type="file" name="myfile" /><br/>
+			<input type="submit" value="submit" />
+		</form>
+	</div>
+	
+</body>
+</html>
