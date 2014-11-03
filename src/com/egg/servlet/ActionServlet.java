@@ -138,6 +138,12 @@ public class ActionServlet extends HttpServlet {
 	}
 
 	protected Method loadMethod(Object ctrl, String methodName) {
+		// for servletPath/package/methodName;jsessionid=xxx
+		int ind = methodName.indexOf(';');
+		if (ind != -1) {
+			methodName = methodName.substring(0, ind);
+		}
+		
 		String key = ctrl.getClass().getName() + "." + methodName;
 		Method m = METHODS.get(key);
 		if (m == null) {
