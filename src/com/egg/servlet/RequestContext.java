@@ -189,6 +189,10 @@ public class RequestContext implements Serializable {
 			return null;
 		}
 	}
+	
+	public String header(String key) {
+		return resp.getHeader(key);
+	}
 
 	public void header(String key, String value) {
 		resp.addHeader(key, value);
@@ -212,6 +216,10 @@ public class RequestContext implements Serializable {
 
 	public void contentType(String type) {
 		resp.setContentType(type);
+	}
+	
+	public void contentLength(int len) {
+		resp.setContentLength(len);
 	}
 
 	public void noCache() {
@@ -297,6 +305,10 @@ public class RequestContext implements Serializable {
 	public void removeSessionAttr(String key) {
 		sessionAttr(key, null);
 		session.removeAttribute(key);
+	}
+	
+	public boolean isAjax() {
+		return (req.getHeader("x-requested-with") != null && req.getHeader("x-requested-with").equalsIgnoreCase("XMLHttpRequest"));
 	}
 
 	public boolean isMultipart() {
