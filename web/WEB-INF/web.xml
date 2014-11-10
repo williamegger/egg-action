@@ -5,7 +5,7 @@
 
 	<filter>
 		<filter-name>EncodingFilter</filter-name>
-		<filter-class>com.egg.filter.EncodingFilter</filter-class>
+		<filter-class>com.demo.filter.EncodingFilter</filter-class>
 	</filter>
 	<filter-mapping>
 		<filter-name>EncodingFilter</filter-name>
@@ -14,10 +14,10 @@
 
 	<servlet>
 		<servlet-name>action</servlet-name>
-		<servlet-class>com.egg.servlet.ActionServlet</servlet-class>
+		<servlet-class>com.eaction.ActionServlet</servlet-class>
 		<init-param>
 			<param-name>api</param-name>
-			<param-value>com.egg.view.ctrl.</param-value>
+			<param-value>com.demo.view.action.</param-value>
 		</init-param>
 	</servlet>
 	<servlet-mapping>

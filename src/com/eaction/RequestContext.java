@@ -1,4 +1,4 @@
-package com.egg.servlet;
+package com.eaction;
 
 import java.io.File;
 import java.io.IOException;
@@ -28,8 +28,6 @@ import org.apache.commons.lang.math.NumberUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.egg.commons.Res;
-
 public class RequestContext implements Serializable {
 
 	private static final long serialVersionUID = -7999141900997547849L;
@@ -44,6 +42,7 @@ public class RequestContext implements Serializable {
 	private boolean isMultipart = false;
 	private List<FileItem> fileItems;
 	private Map<String, Cookie> cookies;
+	private String serverUrl = null;
 
 	private RequestContext(HttpServletRequest req, HttpServletResponse resp) {
 		this.req = req;
@@ -69,7 +68,6 @@ public class RequestContext implements Serializable {
 	private void begin() {
 		loadUploadInfo();
 		attr("base", contextPath());
-		attr("fullbase", Res.WEB_URL);
 	}
 
 	public static synchronized void end() {
@@ -112,6 +110,25 @@ public class RequestContext implements Serializable {
 
 	public String contextPath() {
 		return req.getContextPath();
+	}
+
+	public String serverUrl() {
+		if (serverUrl == null) {
+			String scheme = req.getScheme();
+			String serverName = req.getServerName();
+			int serverPort = req.getServerPort();
+			String contextPath = req.getContextPath();
+
+			StringBuffer sb = new StringBuffer();
+			sb.append(scheme).append("://");
+			sb.append(serverName);
+			if (serverPort != 80) {
+				sb.append(":").append(serverPort);
+			}
+			sb.append(contextPath);
+			serverUrl = sb.toString();
+		}
+		return serverUrl;
 	}
 
 	public String uri() {
@@ -189,7 +206,7 @@ public class RequestContext implements Serializable {
 			return null;
 		}
 	}
-	
+
 	public String header(String key) {
 		return resp.getHeader(key);
 	}
@@ -217,7 +234,7 @@ public class RequestContext implements Serializable {
 	public void contentType(String type) {
 		resp.setContentType(type);
 	}
-	
+
 	public void contentLength(int len) {
 		resp.setContentLength(len);
 	}
@@ -257,7 +274,10 @@ public class RequestContext implements Serializable {
 	}
 
 	public void goto404() {
-		redirect(contextPath());
+		try {
+			resp.sendError(404);
+		} catch (IOException e) {
+		}
 	}
 
 	public void redirect(String uri) {
@@ -306,9 +326,10 @@ public class RequestContext implements Serializable {
 		sessionAttr(key, null);
 		session.removeAttribute(key);
 	}
-	
+
 	public boolean isAjax() {
-		return (req.getHeader("x-requested-with") != null && req.getHeader("x-requested-with").equalsIgnoreCase("XMLHttpRequest"));
+		return (req.getHeader("x-requested-with") != null && req.getHeader("x-requested-with").equalsIgnoreCase(
+				"XMLHttpRequest"));
 	}
 
 	public boolean isMultipart() {

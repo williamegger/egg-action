@@ -1,4 +1,4 @@
-package com.egg.commons;
+package com.demo.commons;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;

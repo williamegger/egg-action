@@ -1,4 +1,4 @@
-package com.egg.servlet;
+package com.eaction;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
@@ -18,7 +18,7 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.egg.servlet.ActionAnn.POST;
+import com.eaction.ActionAnn.POST;
 
 public class ActionServlet extends HttpServlet {
 
@@ -65,26 +65,28 @@ public class ActionServlet extends HttpServlet {
 
 			String[] parts = StringUtils.split(uri, '/');
 			if (parts.length < 2) {
-				context.gotoHome();
+				context.goto404();
 				return;
 			}
 
 			Object action = loadAction(parts[0], parts[1]);
 			if (action == null) {
-				context.gotoHome();
+				context.goto404();
 				return;
 			}
 
 			Method method = loadMethod(action, parts.length > 2 ? parts[2] : "index");
 			if (method == null) {
-				context.gotoHome();
+				context.goto404();
 				return;
 			}
 
 			if (!isPost) {
 				POST must_post = method.getAnnotation(ActionAnn.POST.class);
 				if (must_post != null) {
-					LOG.error("Error. [" + uri + "] must be POST method.");
+					String msg = "Error. [" + uri + "] must be POST method.";
+					LOG.error(msg);
+					context.write(msg);
 					return;
 				}
 			}
@@ -99,7 +101,7 @@ public class ActionServlet extends HttpServlet {
 				method.invoke(action, context);
 				break;
 			default:
-				context.gotoHome();
+				context.goto404();
 				break;
 			}
 		} catch (IllegalArgumentException e) {
@@ -143,7 +145,7 @@ public class ActionServlet extends HttpServlet {
 		if (ind != -1) {
 			methodName = methodName.substring(0, ind);
 		}
-		
+
 		String key = ctrl.getClass().getName() + "." + methodName;
 		Method m = METHODS.get(key);
 		if (m == null) {

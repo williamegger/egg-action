@@ -1,4 +1,4 @@
-package com.egg.view.ctrl;
+package com.demo.view;
 
 import java.util.Collection;
 import java.util.Map;
@@ -27,6 +27,23 @@ public class BaseAction {
 
 	protected boolean isNotBlank(Map<?, ?> m) {
 		return (!isBlank(m));
+	}
+
+	protected String join(Object[] objs, String split) {
+		if (objs == null || objs.length == 0) {
+			return "";
+		}
+
+		StringBuffer sb = new StringBuffer();
+		split = (split == null) ? "" : split;
+		for (int i = 0, len = objs.length; i < len; i++) {
+			if (i > 0) {
+				sb.append(split);
+			}
+			sb.append(objs[i]);
+		}
+
+		return sb.toString();
 	}
 
 }
