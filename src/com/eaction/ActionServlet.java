@@ -6,7 +6,9 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -26,21 +28,16 @@ public class ActionServlet extends HttpServlet {
 
 	private static final Logger LOG = LoggerFactory.getLogger(ActionServlet.class);
 
-	private static final Map<String, String> PKS = new HashMap<String, String>();
+	private static final Map<String, String> PACKAGES = new HashMap<String, String>();
 	private static final Map<String, Object> ACTIONS = new HashMap<String, Object>();
 	private static final Map<String, Method> METHODS = new HashMap<String, Method>();
+	private static final Set<String> EXCLUDE_METHODS = new HashSet<String>();
 
 	@Override
 	public void init(ServletConfig config) throws ServletException {
 		super.init(config);
-
-		if (PKS.isEmpty()) {
-			Enumeration<String> names = config.getInitParameterNames();
-			while (names.hasMoreElements()) {
-				String name = (String) names.nextElement();
-				PKS.put(name, config.getInitParameter(name));
-			}
-		}
+		initPackages(config);
+		initExcludeMethods();
 	}
 
 	@Override
@@ -51,6 +48,31 @@ public class ActionServlet extends HttpServlet {
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		process(req, resp, true);
+	}
+
+	/**
+	 * 初始化请求地址和对用的包
+	 */
+	protected void initPackages(ServletConfig config) {
+		if (PACKAGES.isEmpty()) {
+			Enumeration<String> names = config.getInitParameterNames();
+			while (names.hasMoreElements()) {
+				String name = (String) names.nextElement();
+				PACKAGES.put(name, config.getInitParameter(name));
+			}
+		}
+	}
+
+	/**
+	 * 初始化不执行的方法
+	 */
+	protected void initExcludeMethods() {
+		if (EXCLUDE_METHODS.isEmpty()) {
+			Method[] methods = Object.class.getMethods();
+			for (Method method : methods) {
+				EXCLUDE_METHODS.add(method.getName());
+			}
+		}
 	}
 
 	protected void process(HttpServletRequest req, HttpServletResponse resp, boolean isPost) {
@@ -117,11 +139,14 @@ public class ActionServlet extends HttpServlet {
 		}
 	}
 
+	/**
+	 * 加载Action类
+	 */
 	protected Object loadAction(String shortPKName, String shortClassName) {
 		String key = shortPKName + "." + shortClassName;
 		Object ctrl = ACTIONS.get(key);
-		if (ctrl == null && PKS.containsKey(shortPKName)) {
-			String className = PKS.get(shortPKName) + StringUtils.capitalize(shortClassName) + "Action";
+		if (ctrl == null && PACKAGES.containsKey(shortPKName)) {
+			String className = PACKAGES.get(shortPKName) + StringUtils.capitalize(shortClassName) + "Action";
 			try {
 				ctrl = Class.forName(className).newInstance();
 				if (!ACTIONS.containsKey(key)) {
@@ -139,11 +164,18 @@ public class ActionServlet extends HttpServlet {
 		return ctrl;
 	}
 
+	/**
+	 * 加载方法
+	 */
 	protected Method loadMethod(Object ctrl, String methodName) {
 		// for servletPath/package/methodName;jsessionid=xxx
 		int ind = methodName.indexOf(';');
 		if (ind != -1) {
 			methodName = methodName.substring(0, ind);
+		}
+
+		if (EXCLUDE_METHODS.contains(methodName)) {
+			return null;
 		}
 
 		String key = ctrl.getClass().getName() + "." + methodName;
