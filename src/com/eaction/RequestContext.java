@@ -47,7 +47,7 @@ public class RequestContext implements Serializable {
 	private RequestContext(HttpServletRequest req, HttpServletResponse resp) {
 		this.req = req;
 		this.resp = resp;
-		this.session = req.getSession(false);
+		this.session = req.getSession(true);
 	}
 
 	public static synchronized RequestContext create(HttpServletRequest req, HttpServletResponse resp) {
