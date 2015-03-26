@@ -12,12 +12,12 @@ import java.io.OutputStream;
 import javax.imageio.ImageIO;
 
 import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 public class ImageUtil {
 
-	private static final Logger LOG = LoggerFactory.getLogger(ImageUtil.class);
+	private static final Log LOG = LogFactory.getLog(ImageUtil.class);
 
 	public static final String[] IMG_EXTS = { ".jpg", ".png", ".gif", ".bmp" };
 

@@ -9,12 +9,12 @@ import java.io.OutputStream;
 
 import org.apache.commons.fileupload.util.Streams;
 import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 public class FileUtil {
 
-	private static final Logger LOG = LoggerFactory.getLogger(FileUtil.class);
+	private static final Log LOG = LogFactory.getLog(FileUtil.class);
 
 	/**
 	 * 保存文件

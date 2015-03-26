@@ -8,8 +8,8 @@ import org.apache.commons.fileupload.FileItem;
 
 import com.demo.commons.Res;
 import com.demo.view.BaseAction;
-import com.eaction.ActionAnn.POST;
-import com.eaction.RequestContext;
+import com.egg.eaction.ActionAnn.POST;
+import com.egg.eaction.RequestContext;
 
 /**
  * 测试类 [/api/demo/方法名]

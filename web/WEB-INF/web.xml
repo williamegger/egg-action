@@ -14,7 +14,7 @@
 
 	<servlet>
 		<servlet-name>action</servlet-name>
-		<servlet-class>com.eaction.ActionServlet</servlet-class>
+		<servlet-class>com.egg.eaction.ActionServlet</servlet-class>
 		<init-param>
 			<param-name>api</param-name>
 			<param-value>com.demo.view.action.</param-value>
