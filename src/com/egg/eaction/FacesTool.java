@@ -9,8 +9,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import com.egg.eaction.RequestContext;
-
 public class FacesTool extends RequestContext {
 
 	private static final Log LOG = LogFactory.getLog(FacesTool.class);
@@ -66,6 +64,16 @@ public class FacesTool extends RequestContext {
 			FacesContext.getCurrentInstance().getExternalContext().redirect(contextPath() + uri);
 		} catch (Exception e) {
 			String errorMsg = FacesTool.class + ".redirect():方法异常: " + e.getMessage();
+			LOG.error(errorMsg, e);
+		}
+	}
+
+	@Override
+	public void gotoHome() {
+		try {
+			FacesContext.getCurrentInstance().getExternalContext().redirect(contextPath());
+		} catch (Exception e) {
+			String errorMsg = FacesTool.class + ".gotoHome():方法异常: " + e.getMessage();
 			LOG.error(errorMsg, e);
 		}
 	}
