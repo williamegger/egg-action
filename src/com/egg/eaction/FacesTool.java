@@ -71,7 +71,11 @@ public class FacesTool extends RequestContext {
 	@Override
 	public void gotoHome() {
 		try {
-			FacesContext.getCurrentInstance().getExternalContext().redirect(contextPath());
+			String path = contextPath();
+			if (path.length() == 0) {
+				path = "/";
+			}
+			FacesContext.getCurrentInstance().getExternalContext().redirect(path);
 		} catch (Exception e) {
 			String errorMsg = FacesTool.class + ".gotoHome():方法异常: " + e.getMessage();
 			LOG.error(errorMsg, e);

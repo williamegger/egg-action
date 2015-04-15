@@ -136,7 +136,9 @@ public class RequestContext implements Serializable {
 	}
 
 	public String realPath() {
-		return req.getServletContext().getRealPath("/");
+		// 修改为支持tomcat6，得到真实路径
+		// return req.getServletContext().getRealPath("/");
+		return req.getSession().getServletContext().getRealPath("/");
 	}
 
 	public String method() {
@@ -270,6 +272,10 @@ public class RequestContext implements Serializable {
 	}
 
 	public void gotoHome() {
+		String path = contextPath();
+		if (path.length() == 0) {
+			path = "/";
+		}
 		redirect(contextPath());
 	}
 
