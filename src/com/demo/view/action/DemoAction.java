@@ -7,9 +7,9 @@ import java.util.Set;
 import org.apache.commons.fileupload.FileItem;
 
 import com.demo.commons.Res;
-import com.demo.view.BaseAction;
 import com.egg.eaction.ActionAnn.POST;
 import com.egg.eaction.RequestContext;
+import com.egg.eaction.view.BaseAction;
 
 /**
  * 测试类 [/api/demo/方法名]
@@ -46,5 +46,22 @@ public class DemoAction extends BaseAction {
 			e.printStackTrace();
 			ctx.write("Upload Error");
 		}
+	}
+
+	private String join(Object[] objs, String split) {
+		if (objs == null || objs.length == 0) {
+			return "";
+		}
+
+		StringBuffer sb = new StringBuffer();
+		split = (split == null) ? "" : split;
+		for (int i = 0, len = objs.length; i < len; i++) {
+			if (i > 0) {
+				sb.append(split);
+			}
+			sb.append(objs[i]);
+		}
+
+		return sb.toString();
 	}
 }
