@@ -55,10 +55,10 @@ public class ActionServlet extends HttpServlet {
 
 	protected void process(HttpServletRequest req, HttpServletResponse resp, boolean isPost) {
 		RequestContext context = RequestContext.create(req, resp);
+		String contextPath = context.contextPath();
+		String uri = context.uri();
 
 		try {
-			String contextPath = context.contextPath();
-			String uri = context.uri();
 			if (contextPath.length() > 1) {
 				uri = uri.substring(contextPath.length());
 			}
@@ -105,13 +105,13 @@ public class ActionServlet extends HttpServlet {
 				break;
 			}
 		} catch (IllegalArgumentException e) {
-			LOG.error(".process", e);
+			LOG.error(".process : [" + uri + "]", e);
 		} catch (IllegalAccessException e) {
-			LOG.error(".process", e);
+			LOG.error(".process : [" + uri + "]", e);
 		} catch (InvocationTargetException e) {
-			LOG.error(".process", e);
+			LOG.error(".process : [" + uri + "]", e);
 		} catch (Exception e) {
-			LOG.error(".process", e);
+			LOG.error(".process : [" + uri + "]", e);
 		} finally {
 			RequestContext.end();
 		}
