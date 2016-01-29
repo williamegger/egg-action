@@ -7,9 +7,9 @@ import java.util.Set;
 import org.apache.commons.fileupload.FileItem;
 
 import com.demo.commons.Res;
-import com.egg.eaction.ActionAnn.POST;
-import com.egg.eaction.RequestContext;
-import com.egg.eaction.view.BaseAction;
+import com.egg.action.RequestContext;
+import com.egg.action.ActionAnn.POST;
+import com.egg.action.view.BaseAction;
 
 /**
  * 测试类 [/api/demo/方法名]

@@ -1,4 +1,4 @@
-package com.egg.eaction;
+package com.egg.action;
 
 import java.io.File;
 import java.io.IOException;

@@ -1,4 +1,4 @@
-package com.egg.eaction;
+package com.egg.action;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.context.ExternalContext;

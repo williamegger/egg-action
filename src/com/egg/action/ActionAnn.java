@@ -1,4 +1,4 @@
-package com.egg.eaction;
+package com.egg.action;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

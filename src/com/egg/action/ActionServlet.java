@@ -1,4 +1,4 @@
-package com.egg.eaction;
+package com.egg.action;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
@@ -18,7 +18,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import com.egg.eaction.ActionAnn.POST;
+import com.egg.action.ActionAnn.POST;
 
 public class ActionServlet extends HttpServlet {
 

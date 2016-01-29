@@ -1,4 +1,4 @@
-package com.egg.eaction.view;
+package com.egg.action.view;
 
 import java.util.Collection;
 import java.util.Map;

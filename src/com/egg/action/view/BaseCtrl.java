@@ -1,10 +1,10 @@
-package com.egg.eaction.view;
+package com.egg.action.view;
 
 import java.io.Serializable;
 
 import javax.servlet.http.HttpServletRequest;
 
-import com.egg.eaction.FacesTool;
+import com.egg.action.FacesTool;
 
 public class BaseCtrl extends AbstractBase implements Serializable {
 

@@ -1,4 +1,4 @@
-package com.egg.eaction.view;
+package com.egg.action.view;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -6,7 +6,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import com.alibaba.fastjson.JSONObject;
-import com.egg.eaction.RequestContext;
+import com.egg.action.RequestContext;
 
 public class BaseAction extends AbstractBase {
 
