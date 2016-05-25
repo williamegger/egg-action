@@ -5,6 +5,7 @@ import java.awt.Image;
 import java.awt.Transparency;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -12,12 +13,15 @@ import java.io.OutputStream;
 import javax.imageio.ImageIO;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+/**
+ * 图片工具
+ */
 public class ImageUtil {
 
-	private static final Log LOG = LogFactory.getLog(ImageUtil.class);
+	private static final Logger LOG = LoggerFactory.getLogger(ImageUtil.class);
 
 	public static final String[] IMG_EXTS = { ".jpg", ".png", ".gif", ".bmp" };
 
@@ -63,7 +67,7 @@ public class ImageUtil {
 			logE(".cropSquare() : 方法出现异常 : " + e.getMessage(), e);
 			return false;
 		} finally {
-			FileUtil.closeQuickly(in);
+			FileUtil.quicklyClose(in);
 		}
 	}
 
@@ -81,7 +85,7 @@ public class ImageUtil {
 			logE(".crop() : 方法出现异常 : " + e.getMessage(), e);
 			return false;
 		} finally {
-			FileUtil.closeQuickly(in);
+			FileUtil.quicklyClose(in);
 		}
 	}
 
@@ -122,6 +126,22 @@ public class ImageUtil {
 	/**
 	 * 按比例缩放到指定大小
 	 */
+	public static boolean zoom(String filepath, String savepath, int width, int height) {
+		InputStream in = null;
+		try {
+			in = new FileInputStream(filepath);
+			return zoom(in, savepath, width, height);
+		} catch (Exception e) {
+			logE(".zoom() : 方法出现异常 : " + e.getMessage(), e);
+			return false;
+		} finally {
+			FileUtil.quicklyClose(in);
+		}
+	}
+
+	/**
+	 * 按比例缩放到指定大小
+	 */
 	public static boolean zoom(InputStream in, String filepath, int width, int height) {
 		if (in == null) {
 			return false;
@@ -133,10 +153,13 @@ public class ImageUtil {
 			logE(".zoom() : 方法出现异常 : " + e.getMessage(), e);
 			return false;
 		} finally {
-			FileUtil.closeQuickly(in);
+			FileUtil.quicklyClose(in);
 		}
 	}
 
+	/**
+	 * 缩放到指定宽高
+	 */
 	public static boolean zoomFix(InputStream in, String filepath, int width, int height) {
 		if (in == null) {
 			return false;
@@ -145,10 +168,10 @@ public class ImageUtil {
 			BufferedImage img = ImageIO.read(in);
 			return zoom(img, filepath, width, height, true);
 		} catch (Exception e) {
-			logE(".zoom() : 方法出现异常 : " + e.getMessage(), e);
+			logE(".zoomFix() : 方法出现异常 : " + e.getMessage(), e);
 			return false;
 		} finally {
-			FileUtil.closeQuickly(in);
+			FileUtil.quicklyClose(in);
 		}
 	}
 
@@ -185,16 +208,60 @@ public class ImageUtil {
 		}
 	}
 
+	public static boolean enlarge(String filePath, String savePath, int min) {
+		InputStream in = null;
+		try {
+			in = new FileInputStream(filePath);
+			return enlarge(in, savePath, min);
+		} catch (Exception e) {
+			logE(".enlarge() : 方法出现异常 : " + e.getMessage(), e);
+			return false;
+		} finally {
+			FileUtil.quicklyClose(in);
+		}
+	}
+
+	public static boolean enlarge(InputStream in, String savePath, int min) {
+		if (in == null) {
+			return false;
+		}
+		try {
+			BufferedImage img = ImageIO.read(in);
+			int w = img.getWidth();
+			int h = img.getHeight();
+			int toWidth = w;
+			int toHeight = h;
+			if (w < min || h < min) {
+				if (w < h) {
+					toWidth = min;
+					toHeight = (int) (h * 1.0 * min / w);
+				} else {
+					toHeight = min;
+					toWidth = (int) (w * 1.0 * min / h);
+				}
+			}
+			// 保存图片
+			return saveScaleImage(img, savePath, toWidth, toHeight);
+		} catch (Exception e) {
+			logE(".enlarge() : 方法出现异常 : " + e.getMessage(), e);
+			return false;
+		} finally {
+			FileUtil.quicklyClose(in);
+		}
+	}
+
 	/**
 	 * 得到扩展名：.jpg, .png 等
 	 */
 	public static String ext(String filename) {
-		try {
-			int ind = filename.lastIndexOf(".");
-			return filename.substring(ind).toLowerCase();
-		} catch (Exception e) {
+		if (filename == null || filename.isEmpty()) {
 			return "";
 		}
+		int ind = filename.lastIndexOf(".");
+		if (ind == -1) {
+			return "";
+		}
+		return filename.substring(ind).toLowerCase();
 	}
 
 	/**
@@ -212,14 +279,16 @@ public class ImageUtil {
 			logE(".zoom() : 方法出现异常 : " + e.getMessage(), e);
 			return false;
 		} finally {
-			FileUtil.closeQuickly(out);
-			FileUtil.closeQuickly(in);
+			FileUtil.quicklyClose(out);
+			FileUtil.quicklyClose(in);
 		}
 	}
 
-	// ============================================================== private static method
+	// ============================================================== private
+	// static method
 	/**
 	 * 保存缩放图片
+	 * 
 	 * @param image 原图
 	 * @param file 保存
 	 * @param w 宽

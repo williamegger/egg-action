@@ -15,8 +15,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.egg.action.ActionAnn.POST;
 
@@ -24,7 +24,7 @@ public class ActionServlet extends HttpServlet {
 
 	private static final long serialVersionUID = -6191626884139403356L;
 
-	private static final Log LOG = LogFactory.getLog(ActionServlet.class);
+	private static final Logger LOG = LoggerFactory.getLogger(ActionServlet.class);
 
 	private static final Map<String, String> PKS = new HashMap<String, String>();
 	private static final Map<String, Object> ACTIONS = new HashMap<String, Object>();

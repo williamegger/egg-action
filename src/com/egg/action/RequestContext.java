@@ -25,13 +25,13 @@ import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.NumberUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class RequestContext implements Serializable {
 
 	private static final long serialVersionUID = -7999141900997547849L;
-	private static final Log LOG = LogFactory.getLog(RequestContext.class);
+	private static final Logger LOG = LoggerFactory.getLogger(RequestContext.class);
 	private static final String UTF8 = "utf-8";
 
 	private static final ThreadLocal<RequestContext> CTX = new ThreadLocal<RequestContext>();

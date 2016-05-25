@@ -1,5 +1,8 @@
 package com.demo.commons;
 
+/**
+ * 文件工具类
+ */
 import java.io.Closeable;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -9,12 +12,12 @@ import java.io.OutputStream;
 
 import org.apache.commons.fileupload.util.Streams;
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class FileUtil {
 
-	private static final Log LOG = LogFactory.getLog(FileUtil.class);
+	private static final Logger LOG = LoggerFactory.getLogger(FileUtil.class);
 
 	/**
 	 * 保存文件
@@ -41,8 +44,8 @@ public class FileUtil {
 			LOG.error(FileUtil.class + ".save():保存文件方法异常:", e);
 			return false;
 		} finally {
-			FileUtil.closeQuickly(out);
-			FileUtil.closeQuickly(in);
+			FileUtil.quicklyClose(out);
+			FileUtil.quicklyClose(in);
 		}
 	}
 
@@ -66,7 +69,7 @@ public class FileUtil {
 	/**
 	 * 快速关闭
 	 */
-	public static void closeQuickly(Closeable obj) {
+	public static void quicklyClose(Closeable obj) {
 		if (obj != null) {
 			try {
 				obj.close();
@@ -87,6 +90,20 @@ public class FileUtil {
 			return true;
 		}
 		return dir.mkdirs();
+	}
+
+	/**
+	 * 得到扩展名：.xxx
+	 */
+	public static String ext(String filename) {
+		if (filename == null || filename.isEmpty()) {
+			return "";
+		}
+		int ind = filename.lastIndexOf(".");
+		if (ind == -1) {
+			return "";
+		}
+		return filename.substring(ind).toLowerCase();
 	}
 
 }
