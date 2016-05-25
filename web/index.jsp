@@ -38,13 +38,16 @@ form {
 		</form>
 		<form action="${api}/view" method="post" target="_api">
 			<h3>${api}/view</h3>
-			<p>paramA : <input text="text" name="paramA" value="" /></p>
-			<p>paramB : <input text="text" name="paramB" value="" /></p>
-			<p>paramC : <input text="text" name="paramC" value="" /></p>
+			<p>paramA : <input text="text" name="paramA" value="paramA" /></p>
+			<p>paramB : <input text="text" name="paramB" value="paramB" /></p>
+			<p>paramC : <input text="text" name="paramC" value="paramC" /></p>
 			<input type="submit" value="Submit" />
 		</form>
 		<form action="${api}/upload" method="post" enctype="multipart/form-data" target="_api">
 			<h3>${api}/upload</h3>
+			<p>paramA : <input text="text" name="paramA" value="paramA" /></p>
+			<p>paramB : <input text="text" name="paramB" value="paramB" /></p>
+			<p>paramC : <input text="text" name="paramC" value="paramC" /></p>
 			<p><input type="file" name="myfile" /></p>
 			<input type="submit" value="Submit" />
 		</form>

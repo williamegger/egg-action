@@ -19,6 +19,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.egg.action.ActionAnn.POST;
+import com.egg.action.multipart.MultipartHandler;
 
 public class ActionServlet extends HttpServlet {
 
@@ -29,15 +30,22 @@ public class ActionServlet extends HttpServlet {
 	private static final Map<String, String> PKS = new HashMap<String, String>();
 	private static final Map<String, Object> ACTIONS = new HashMap<String, Object>();
 	private static final Map<String, Method> METHODS = new HashMap<String, Method>();
+	private static final Map<String, String> CONFS = new HashMap<String, String>();
+
+	private static final String KEY_MULTIPART_HANDLER = "multipartHandler";
+	private static final String DEFAULT_MULTIPART_HANDLER = "com.egg.action.multipart.CommonsMultipartHandler";
 
 	@Override
 	public void init(ServletConfig config) throws ServletException {
 		super.init(config);
 
-		if (PKS.isEmpty()) {
-			Enumeration<String> names = config.getInitParameterNames();
-			while (names.hasMoreElements()) {
-				String name = (String) names.nextElement();
+		Enumeration<String> names = config.getInitParameterNames();
+		String name;
+		while (names.hasMoreElements()) {
+			name = names.nextElement();
+			if (KEY_MULTIPART_HANDLER.equals(name)) {
+				CONFS.put(name, config.getInitParameter(name));
+			} else {
 				PKS.put(name, config.getInitParameter(name));
 			}
 		}
@@ -54,7 +62,8 @@ public class ActionServlet extends HttpServlet {
 	}
 
 	protected void process(HttpServletRequest req, HttpServletResponse resp, boolean isPost) {
-		RequestContext context = RequestContext.create(req, resp);
+		MultipartHandler multipartHandler = this.buildMultipartHandler();
+		RequestContext context = RequestContext.create(req, resp, multipartHandler);
 		String contextPath = context.contextPath();
 		String uri = context.uri();
 
@@ -105,13 +114,13 @@ public class ActionServlet extends HttpServlet {
 				break;
 			}
 		} catch (IllegalArgumentException e) {
-			LOG.error(".process : [" + uri + "]", e);
+			LOG.error(".process() : [" + uri + "]: ", e);
 		} catch (IllegalAccessException e) {
-			LOG.error(".process : [" + uri + "]", e);
+			LOG.error(".process() : [" + uri + "]: ", e);
 		} catch (InvocationTargetException e) {
-			LOG.error(".process : [" + uri + "]", e);
+			LOG.error(".process() : [" + uri + "]: ", e);
 		} catch (Exception e) {
-			LOG.error(".process : [" + uri + "]", e);
+			LOG.error(".process() : [" + uri + "]: ", e);
 		} finally {
 			RequestContext.end();
 		}
@@ -131,9 +140,9 @@ public class ActionServlet extends HttpServlet {
 				}
 			} catch (ClassNotFoundException e) {
 			} catch (InstantiationException e) {
-				LOG.error(".loadAction", e);
+				LOG.error(".loadAction(): ", e);
 			} catch (IllegalAccessException e) {
-				LOG.error(".loadAction", e);
+				LOG.error(".loadAction(): ", e);
 			}
 		}
 		return ctrl;
@@ -162,6 +171,35 @@ public class ActionServlet extends HttpServlet {
 			}
 		}
 		return m;
+	}
+
+	private MultipartHandler buildMultipartHandler() {
+		MultipartHandler handler = null;
+		String handlerClassStr = CONFS.get(KEY_MULTIPART_HANDLER);
+
+		if (handlerClassStr != null) {
+			try {
+				handler = (MultipartHandler) Class.forName(handlerClassStr).newInstance();
+			} catch (Exception e) {
+				LOG.error(".buildMultipartHandler(): Config Error!!! multipartHandler[" + handlerClassStr + "] newInstance() error: ", e);
+				handler = getDefaultMultipartHandler();
+			}
+		} else {
+			handler = getDefaultMultipartHandler();
+		}
+
+		return handler;
+	}
+	
+	private MultipartHandler getDefaultMultipartHandler() {
+		MultipartHandler handler = null;
+		try {
+			CONFS.put(KEY_MULTIPART_HANDLER, DEFAULT_MULTIPART_HANDLER);
+			handler = (MultipartHandler) Class.forName(DEFAULT_MULTIPART_HANDLER).newInstance();
+		} catch (Exception e) {
+			LOG.error(".getDefaultMultipartHandler(): ", e);
+		}
+		return handler;
 	}
 
 }

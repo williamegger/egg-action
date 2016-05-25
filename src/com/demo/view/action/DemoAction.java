@@ -9,6 +9,7 @@ import org.apache.commons.fileupload.FileItem;
 import com.demo.commons.Res;
 import com.egg.action.RequestContext;
 import com.egg.action.ActionAnn.POST;
+import com.egg.action.multipart.FilePart;
 import com.egg.action.view.BaseAction;
 
 /**
@@ -37,10 +38,15 @@ public class DemoAction extends BaseAction {
 	@POST
 	public void upload(RequestContext ctx) {
 		try {
-			FileItem uploadFile = ctx.formFile();
-			File file = new File(ctx.realPath() + Res.UPLOAD_PATH + uploadFile.getName());
+			ctx.param("paramA");
+			ctx.param("paramB");
+			ctx.param("paramC");
+			
+			
+			FilePart filePart = ctx.filePart();
+			File file = new File(ctx.realPath() + Res.UPLOAD_PATH + filePart.getName());
 			file.getParentFile().mkdirs();
-			uploadFile.write(file);
+			filePart.write(file);
 			ctx.write("Upload OK [" + file.getPath() + "]");
 		} catch (Exception e) {
 			e.printStackTrace();

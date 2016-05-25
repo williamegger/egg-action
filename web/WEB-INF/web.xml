@@ -15,6 +15,11 @@
 	<servlet>
 		<servlet-name>action</servlet-name>
 		<servlet-class>com.egg.action.ActionServlet</servlet-class>
+		<multipart-config></multipart-config>
+		<init-param>
+			<param-name>multipartHandler</param-name>
+			<param-value>com.egg.action.multipart.Servlet3MultipartHandler</param-value>
+		</init-param>
 		<init-param>
 			<param-name>api</param-name>
 			<param-value>com.demo.view.action.</param-value>

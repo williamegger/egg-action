@@ -1,6 +1,5 @@
 package com.egg.action;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
@@ -19,14 +18,14 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.apache.commons.fileupload.FileItem;
-import org.apache.commons.fileupload.FileUploadException;
-import org.apache.commons.fileupload.disk.DiskFileItemFactory;
-import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.NumberUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.egg.action.multipart.CommonsMultipartHandler;
+import com.egg.action.multipart.FilePart;
+import com.egg.action.multipart.MultipartHandler;
 
 public class RequestContext implements Serializable {
 
@@ -39,22 +38,30 @@ public class RequestContext implements Serializable {
 	private HttpServletRequest req;
 	private HttpServletResponse resp;
 	private HttpSession session;
+	private MultipartHandler multipartHandler = null;
 	private boolean isMultipart = false;
-	private List<FileItem> fileItems;
+	private List<FilePart> fileParts = null;
+	private Map<String, String> multipartParamsMap = null;
 	private Map<String, Cookie> cookies;
 	private String serverUrl = null;
 
 	protected RequestContext(HttpServletRequest req, HttpServletResponse resp) {
+		this(req, resp, new CommonsMultipartHandler());
+	}
+
+	protected RequestContext(HttpServletRequest req, HttpServletResponse resp, MultipartHandler multipartHandler) {
 		this.req = req;
 		this.resp = resp;
 		this.session = req.getSession(false);
+		this.multipartHandler = multipartHandler;
 	}
 
-	public static synchronized RequestContext create(HttpServletRequest req, HttpServletResponse resp) {
+	public static synchronized RequestContext create(HttpServletRequest req, HttpServletResponse resp,
+			MultipartHandler multipartHandler) {
 		LOG.debug("create RequestContext ...");
 		RequestContext ctx = CTX.get();
 		if (ctx == null) {
-			ctx = new RequestContext(req, resp);
+			ctx = new RequestContext(req, resp, multipartHandler);
 			ctx.begin();
 			CTX.set(ctx);
 		}
@@ -66,7 +73,13 @@ public class RequestContext implements Serializable {
 	}
 
 	private void begin() {
-		loadUploadInfo();
+		if (multipartHandler != null) {
+			isMultipart = multipartHandler.isMultipart(req);
+			if (isMultipart) {
+				fileParts = multipartHandler.parseFiles(req);
+				multipartParamsMap = multipartHandler.parseParams(req);
+			}
+		}
 		attr("base", contextPath());
 	}
 
@@ -77,7 +90,9 @@ public class RequestContext implements Serializable {
 			ctx.req = null;
 			ctx.resp = null;
 			ctx.session = null;
-			ctx.fileItems = null;
+			ctx.multipartHandler = null;
+			ctx.fileParts = null;
+			ctx.multipartParamsMap = null;
 			ctx.cookies = null;
 			ctx = null;
 			CTX.set(null);
@@ -167,7 +182,12 @@ public class RequestContext implements Serializable {
 	}
 
 	public String param(String key) {
-		return req.getParameter(key);
+		String result = req.getParameter(key);
+		if (result == null && multipartParamsMap != null) {
+			result = multipartParamsMap.get(key);
+		}
+		LOG.info(key + ":" + result);
+		return result;
 	}
 
 	public String param(String key, boolean decode) {
@@ -342,17 +362,13 @@ public class RequestContext implements Serializable {
 		return isMultipart;
 	}
 
-	public List<FileItem> fileItems() {
-		return fileItems;
+	public List<FilePart> fileParts() {
+		return fileParts;
 	}
 
-	public FileItem formFile() {
-		if (this.fileItems != null) {
-			for (FileItem item : this.fileItems) {
-				if (!item.isFormField()) {
-					return item;
-				}
-			}
+	public FilePart filePart() {
+		if (fileParts != null && !fileParts.isEmpty()) {
+			return fileParts.get(0);
 		}
 		return null;
 	}
@@ -421,30 +437,6 @@ public class RequestContext implements Serializable {
 	}
 
 	// ============================================================== private method
-	@SuppressWarnings("unchecked")
-	private void loadUploadInfo() {
-		isMultipart = ServletFileUpload.isMultipartContent(req);
-		if (!isMultipart) {
-			return;
-		}
-
-		File tmpFile = new File(realPath() + "/upload/tmp");
-		if (!tmpFile.exists()) {
-			tmpFile.mkdirs();
-		}
-
-		DiskFileItemFactory factory = new DiskFileItemFactory();
-		factory.setSizeThreshold(4096);
-		factory.setRepository(tmpFile);
-
-		ServletFileUpload upload = new ServletFileUpload(factory);
-		try {
-			fileItems = upload.parseRequest(req);
-		} catch (FileUploadException e) {
-			log(".loadUploadInfo()", e);
-		}
-	}
-
 	private void log(String msg, Throwable e) {
 		LOG.error(RequestContext.class.getName() + msg + ":方法出现异常:", e);
 	}
