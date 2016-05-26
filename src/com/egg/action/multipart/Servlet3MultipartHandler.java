@@ -60,7 +60,7 @@ public class Servlet3MultipartHandler implements MultipartHandler {
 	}
 
 	@Override
-	public Map<String, String> parseParams(HttpServletRequest req) {
+	public Map<String, String[]> parseParams(HttpServletRequest req) {
 		return null;
 	}
 

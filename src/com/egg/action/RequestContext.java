@@ -41,7 +41,7 @@ public class RequestContext implements Serializable {
 	private MultipartHandler multipartHandler = null;
 	private boolean isMultipart = false;
 	private List<FilePart> fileParts = null;
-	private Map<String, String> multipartParamsMap = null;
+	private Map<String, String[]> parameterMap = null;
 	private Map<String, Cookie> cookies;
 	private String serverUrl = null;
 
@@ -54,6 +54,7 @@ public class RequestContext implements Serializable {
 		this.resp = resp;
 		this.session = req.getSession(false);
 		this.multipartHandler = multipartHandler;
+		this.parameterMap = req.getParameterMap();
 	}
 
 	public static synchronized RequestContext create(HttpServletRequest req, HttpServletResponse resp,
@@ -77,7 +78,10 @@ public class RequestContext implements Serializable {
 			isMultipart = multipartHandler.isMultipart(req);
 			if (isMultipart) {
 				fileParts = multipartHandler.parseFiles(req);
-				multipartParamsMap = multipartHandler.parseParams(req);
+				Map<String, String[]> multipartParamsMap = multipartHandler.parseParams(req);
+				if (multipartParamsMap != null && !multipartParamsMap.isEmpty()) {
+					this.parameterMap.putAll(multipartParamsMap);
+				}
 			}
 		}
 		attr("base", contextPath());
@@ -92,7 +96,7 @@ public class RequestContext implements Serializable {
 			ctx.session = null;
 			ctx.multipartHandler = null;
 			ctx.fileParts = null;
-			ctx.multipartParamsMap = null;
+			ctx.parameterMap = null;
 			ctx.cookies = null;
 			ctx = null;
 			CTX.set(null);
@@ -161,7 +165,7 @@ public class RequestContext implements Serializable {
 	}
 
 	public String[] params(String key) {
-		return req.getParameterValues(key);
+		return parameterMap.get(key);
 	}
 
 	public List<Integer> paramsInt(String key) {
@@ -182,9 +186,12 @@ public class RequestContext implements Serializable {
 	}
 
 	public String param(String key) {
-		String result = req.getParameter(key);
-		if (result == null && multipartParamsMap != null) {
-			result = multipartParamsMap.get(key);
+		String result = null;
+		if (parameterMap.containsKey(key)) {
+			String[] pArray = parameterMap.get(key);
+			if (pArray != null && pArray.length > 0) {
+				result = pArray[0];
+			}
 		}
 		LOG.info(key + ":" + result);
 		return result;

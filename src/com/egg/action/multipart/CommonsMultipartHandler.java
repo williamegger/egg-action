@@ -27,9 +27,9 @@ public class CommonsMultipartHandler implements MultipartHandler {
 
 	private Boolean isMultipart = null;
 	private List<FilePart> fileParts = null;
-	private Map<String, String> params = null;
+	private Map<String, String[]> params = null;
 	private boolean isInitFinish = false;
-	
+
 	public CommonsMultipartHandler() {
 	}
 
@@ -50,7 +50,7 @@ public class CommonsMultipartHandler implements MultipartHandler {
 	}
 
 	@Override
-	public Map<String, String> parseParams(HttpServletRequest req) {
+	public Map<String, String[]> parseParams(HttpServletRequest req) {
 		if (!isInitFinish) {
 			init(req);
 		}
@@ -79,11 +79,11 @@ public class CommonsMultipartHandler implements MultipartHandler {
 			}
 
 			fileParts = new ArrayList<FilePart>();
-			params = new HashMap<String, String>();
+			params = new HashMap<String, String[]>();
 			FilePart filePart = null;
 			for (FileItem fileItem : fileItems) {
 				if (fileItem.isFormField()) {
-					params.put(fileItem.getFieldName(), fileItem.getString(UTF8));
+					params.put(fileItem.getFieldName(), new String[] { fileItem.getString(UTF8) });
 				} else {
 					filePart = this.build(fileItem);
 					if (filePart != null) {

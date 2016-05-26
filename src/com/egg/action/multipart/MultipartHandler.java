@@ -14,6 +14,6 @@ public interface MultipartHandler {
 
 	public List<FilePart> parseFiles(HttpServletRequest req);
 
-	public Map<String, String> parseParams(HttpServletRequest req);
+	public Map<String, String[]> parseParams(HttpServletRequest req);
 
 }
