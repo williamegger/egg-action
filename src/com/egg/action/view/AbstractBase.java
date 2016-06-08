@@ -6,6 +6,8 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.beanutils.BeanUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public abstract class AbstractBase {
 
@@ -87,5 +89,18 @@ public abstract class AbstractBase {
 			str = str.substring(0, max);
 		}
 		return str;
+	}
+
+	// ------------
+	// LOG
+	// ------------
+	protected Logger log = LoggerFactory.getLogger(this.getClass());
+
+	protected void logE(String msg, Throwable e) {
+		log.error(msg, e);
+	}
+
+	protected void logI(Object msg) {
+		log.info(msg == null ? null : msg.toString());
 	}
 }

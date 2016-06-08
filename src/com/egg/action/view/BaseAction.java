@@ -2,19 +2,14 @@ package com.egg.action.view;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.alibaba.fastjson.JSONObject;
 import com.egg.action.RequestContext;
 
 public class BaseAction extends AbstractBase {
 
-	private static final Logger LOG = LoggerFactory.getLogger(BaseAction.class);
-
 	@Override
 	protected HttpServletRequest getRequest() {
-		return  RequestContext.get().request();
+		return RequestContext.get().request();
 	}
 
 	// ------------
@@ -38,7 +33,7 @@ public class BaseAction extends AbstractBase {
 			sb.append("[ ").append(method).append(" ] ");
 			sb.append("[ ").append(url).append(query).append(" ] ");
 			NullPointerException e = new NullPointerException(sb.toString());
-			LOG.error(null, e);
+			logE(null, e);
 
 			return null;
 		}
