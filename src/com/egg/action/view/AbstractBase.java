@@ -39,7 +39,7 @@ public abstract class AbstractBase {
 	// ------------
 	// Commons
 	// ------------
-	public <T> T form2Bean(Class<T> beanClass) {
+	protected <T> T form2Bean(Class<T> beanClass) {
 		try {
 			T bean = beanClass.newInstance();
 			BeanUtils.populate(bean, getRequest().getParameterMap());
