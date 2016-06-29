@@ -237,7 +237,7 @@ public class RequestContext implements Serializable {
 	}
 
 	public String header(String key) {
-		return resp.getHeader(key);
+		return req.getHeader(key);
 	}
 
 	public void header(String key, String value) {
