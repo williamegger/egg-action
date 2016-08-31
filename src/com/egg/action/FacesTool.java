@@ -24,7 +24,7 @@ public class FacesTool extends RequestContext {
 	}
 
 	public FacesTool(HttpServletRequest req, HttpServletResponse resp) {
-		super(req, resp);
+		super(req, resp, null);
 	}
 
 	public void addOptStatus(boolean success) {

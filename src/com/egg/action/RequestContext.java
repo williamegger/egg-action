@@ -23,7 +23,6 @@ import org.apache.commons.lang.math.NumberUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.egg.action.multipart.CommonsMultipartHandler;
 import com.egg.action.multipart.FilePart;
 import com.egg.action.multipart.MultipartHandler;
 
@@ -44,10 +43,6 @@ public class RequestContext implements Serializable {
 	private Map<String, String[]> parameterMap = null;
 	private Map<String, Cookie> cookies;
 	private String serverUrl = null;
-
-	protected RequestContext(HttpServletRequest req, HttpServletResponse resp) {
-		this(req, resp, new CommonsMultipartHandler());
-	}
 
 	protected RequestContext(HttpServletRequest req, HttpServletResponse resp, MultipartHandler multipartHandler) {
 		this.req = req;
