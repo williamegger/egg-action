@@ -12,6 +12,7 @@ import com.egg.action.upload.FilePart;
 import com.egg.common.utils.FileUtil;
 
 @Action("test")
+// @Action(value = "test", isSingle = false)
 public class TestAction {
 
 	private int count;
@@ -19,7 +20,7 @@ public class TestAction {
 	public void index() {
 		RequestContext.get().write("This's TestAction Index");
 	}
-	
+
 	public void count() {
 		RequestContext.get().write("Count = " + (count++));
 	}
@@ -42,7 +43,7 @@ public class TestAction {
 			String fileName = System.currentTimeMillis() + FileUtil.ext(filePart.getFileName());
 			String filePath = ctx.realPath() + "upload/" + fileName;
 			FileUtil.save(filePart.getInputStream(), filePath);
-			
+
 			html.append("<table>");
 			html.append("<tr><th colspan=\"2\">Upload File</th></tr>");
 			html.append("<tr><td>FileName</td>");
@@ -53,7 +54,8 @@ public class TestAction {
 			html.append("<td>").append(filePart.getSize()).append("</td></tr>");
 			html.append("<tr><td>FormName</td>");
 			html.append("<td>").append(filePart.getFormName()).append("</td></tr>");
-			html.append("<tr><td colspan=\"2\"><img src=\"" + ctx.contextPath() + "/upload/" + fileName + "\" style=\"max-width:100%;\" /></td></tr>");
+			html.append("<tr><td colspan=\"2\"><img src=\"" + ctx.contextPath() + "/upload/" + fileName
+					+ "\" style=\"max-width:100%;\" /></td></tr>");
 			html.append("</table>");
 		}
 		ctx.writeHTML(html);
