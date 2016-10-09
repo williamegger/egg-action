@@ -1,33 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
-	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd" id="WebApp_ID" version="3.0">
-	<display-name>egg-action</display-name>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns="http://java.sun.com/xml/ns/javaee" xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
+	id="WebApp_ID" version="3.0">
 
-	<filter>
-		<filter-name>EncodingFilter</filter-name>
-		<filter-class>com.demo.filter.EncodingFilter</filter-class>
-	</filter>
-	<filter-mapping>
-		<filter-name>EncodingFilter</filter-name>
-		<url-pattern>/*</url-pattern>
-	</filter-mapping>
+	<display-name>egg-action</display-name>
 
 	<servlet>
 		<servlet-name>action</servlet-name>
-		<servlet-class>com.egg.action.ActionServlet</servlet-class>
+		<servlet-class>com.egg.action.core.ActionServlet</servlet-class>
+		<!-- 
 		<multipart-config></multipart-config>
 		<init-param>
-			<param-name>multipartHandler</param-name>
-			<param-value>com.egg.action.multipart.Servlet3MultipartHandler</param-value>
+			<param-name>uploadHandler</param-name>
+			<param-value>com.egg.action.upload.support.Servlet3UploadHandler</param-value>
 		</init-param>
+		 -->
 		<init-param>
-			<param-name>api</param-name>
-			<param-value>com.demo.view.action.</param-value>
+			<param-name>scanPackage</param-name>
+			<param-value>com.demo</param-value>
 		</init-param>
+		<load-on-startup>1</load-on-startup>
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>action</servlet-name>
-		<url-pattern>/api/*</url-pattern>
+		<url-pattern>/</url-pattern>
 	</servlet-mapping>
 
 	<welcome-file-list>

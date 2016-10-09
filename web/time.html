@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Time</title>
+</head>
+<body>
+
+	<h1 id="time"></h1>
+
+	<script>
+		window.onload = function() {
+			setInterval(function() {
+				showTime();
+			}, 1000);
+			showTime();
+		};
+
+		function showTime() {
+			document.querySelector('#time').innerText = (new Date()
+					.toTimeString());
+		}
+	</script>
+</body>
+</html>

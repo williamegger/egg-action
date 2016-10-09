@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Home</title>
+<style type="text/css">
+html, body {
+	background-color: #fefefe;
+}
+h3 {
+	margin-bottom: 5px;
+}
+a {
+	display: block;
+	cursor: pointer;
+	font-size: 16px;
+	font-weight: bold;
+	text-decoration: underline;
+	color: #55f;
+}
+a:hover {
+	color: #f55;
+}
+form {
+	margin: 10px 0;
+	padding: 5px 0;
+	border: 1px solid #ccc;
+}
+
+.wrap {
+	margin: 0 auto;
+	width: 960px;
+}
+</style>
+</head>
+<body>
+
+	<div class="wrap">
+		<h1>Hello, EAction</h1>
+		<h3>TestAction</h3>
+		<a target="_blank" href="test">/test</a>
+		<a target="_blank" href="test/count">/test/count</a>
+		<a target="_blank" href="test/mustBePost">/test/mustBePost - GET</a>
+		<form target="_blank" action="test/mustBePost" method="post">
+			<input type="submit" value="/test/mustBePost - POST" />
+		</form>
+		<form target="_blank" action="test/params" method="post">
+			<input type="text" name="key1" value="值1" /><br />
+			<input type="text" name="key2" value="值2" /><br />
+			<input type="text" name="key3" value="值3" /><br />
+			<input type="checkbox" name="chk" value="2G" checked="checked" />2G<br />
+			<input type="checkbox" name="chk" value="4G" checked="checked" />4G<br />
+			<input type="checkbox" name="chk" value="8G" checked="checked" />8G<br />
+			<input type="submit" value="/test/params" />
+		</form>
+		<form target="_blank" action="test/upload" method="post" enctype="multipart/form-data">
+			<input type="file" name="myfile" /><br />
+			<input type="text" name="key1" value="值1" /><br />
+			<input type="text" name="key2" value="值2" /><br />
+			<input type="text" name="key3" value="值3" /><br />
+			<input type="checkbox" name="chk" value="2G" checked="checked" />2G<br />
+			<input type="checkbox" name="chk" value="4G" checked="checked" />4G<br />
+			<input type="checkbox" name="chk" value="8G" checked="checked" />8G<br />
+			<input type="submit" value="/test/upload" />
+		</form>
+		<h3>Resources</h3>
+		<a target="_blank" href="cat.jpg">/cat.jpg</a>
+		<a target="_blank" href="time.html">/time.html</a>
+		<a target="_blank" href="req.jsp">/req.jsp</a>
+	</div>
+</body>
+</html>
