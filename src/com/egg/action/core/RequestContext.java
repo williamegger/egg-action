@@ -16,16 +16,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.math.NumberUtils;
-
 import com.egg.action.upload.FilePart;
 import com.egg.action.upload.UploadHandler;
 import com.egg.common.log.LogKit;
 
 public class RequestContext {
 
-	private static final String UTF8 = "utf-8";
+	private static final String UTF8 = "UTF-8";
 
 	private static final ThreadLocal<RequestContext> CTX = new ThreadLocal<RequestContext>();
 
@@ -146,7 +143,7 @@ public class RequestContext {
 	public Map<String, String[]> getParameterMap() {
 		return parameterMap;
 	}
-	
+
 	public String[] params(String key) {
 		return parameterMap.get(key);
 	}
@@ -187,7 +184,7 @@ public class RequestContext {
 	public String param(String key, boolean decode) {
 		String val = param(key);
 		if (decode) {
-			if (StringUtils.isNotBlank(val)) {
+			if (val != null && !val.trim().isEmpty()) {
 				try {
 					val = URLDecoder.decode(val, UTF8);
 				} catch (UnsupportedEncodingException e) {
@@ -198,19 +195,39 @@ public class RequestContext {
 	}
 
 	public int param(String key, int def) {
-		return NumberUtils.toInt(param(key), def);
+		try {
+			String val = param(key);
+			return (val == null ? def : Integer.valueOf(val));
+		} catch (Exception e) {
+			return def;
+		}
 	}
 
 	public long param(String key, long def) {
-		return NumberUtils.toLong(param(key), def);
+		try {
+			String val = param(key);
+			return (val == null ? def : Long.valueOf(val));
+		} catch (Exception e) {
+			return def;
+		}
 	}
 
 	public float param(String key, float def) {
-		return NumberUtils.toFloat(param(key), def);
+		try {
+			String val = param(key);
+			return (val == null ? def : Float.valueOf(val));
+		} catch (Exception e) {
+			return def;
+		}
 	}
 
 	public double param(String key, double def) {
-		return NumberUtils.toDouble(param(key), def);
+		try {
+			String val = param(key);
+			return (val == null ? def : Double.valueOf(val));
+		} catch (Exception e) {
+			return def;
+		}
 	}
 
 	public Date param(String key, String pattern) {
