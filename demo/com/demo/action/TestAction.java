@@ -9,6 +9,7 @@ import com.egg.action.core.ActionAnno.Action;
 import com.egg.action.core.ActionAnno.POST;
 import com.egg.action.core.RequestContext;
 import com.egg.action.upload.FilePart;
+import com.egg.common.log.LogKit;
 import com.egg.common.utils.FileUtil;
 
 @Action("test")
@@ -35,30 +36,34 @@ public class TestAction {
 	}
 
 	public void upload(RequestContext ctx) {
-		StringBuilder html = getParamsHtml();
-		FilePart filePart = ctx.filePart();
-		if (filePart == null) {
-			html.append("<h3>上传文件为空</h3>");
-		} else {
-			String fileName = System.currentTimeMillis() + FileUtil.ext(filePart.getFileName());
-			String filePath = ctx.realPath() + "upload/" + fileName;
-			FileUtil.save(filePart.getInputStream(), filePath);
-
-			html.append("<table>");
-			html.append("<tr><th colspan=\"2\">Upload File</th></tr>");
-			html.append("<tr><td>FileName</td>");
-			html.append("<td>").append(filePart.getFileName()).append("</td></tr>");
-			html.append("<tr><td>ContentType</td>");
-			html.append("<td>").append(filePart.getContentType()).append("</td></tr>");
-			html.append("<tr><td>Size</td>");
-			html.append("<td>").append(filePart.getSize()).append("</td></tr>");
-			html.append("<tr><td>FormName</td>");
-			html.append("<td>").append(filePart.getFormName()).append("</td></tr>");
-			html.append("<tr><td colspan=\"2\"><img src=\"" + ctx.contextPath() + "/upload/" + fileName
-					+ "\" style=\"max-width:100%;\" /></td></tr>");
-			html.append("</table>");
+		try {
+			StringBuilder html = getParamsHtml();
+			FilePart filePart = ctx.filePart();
+			if (filePart == null) {
+				html.append("<h3>上传文件为空</h3>");
+			} else {
+				String fileName = System.currentTimeMillis() + FileUtil.getExt(filePart.getFileName());
+				String filePath = ctx.realPath() + "upload/" + fileName;
+				FileUtil.save(filePart.getInputStream(), filePath);
+				
+				html.append("<table>");
+				html.append("<tr><th colspan=\"2\">Upload File</th></tr>");
+				html.append("<tr><td>FileName</td>");
+				html.append("<td>").append(filePart.getFileName()).append("</td></tr>");
+				html.append("<tr><td>ContentType</td>");
+				html.append("<td>").append(filePart.getContentType()).append("</td></tr>");
+				html.append("<tr><td>Size</td>");
+				html.append("<td>").append(filePart.getSize()).append("</td></tr>");
+				html.append("<tr><td>FormName</td>");
+				html.append("<td>").append(filePart.getFormName()).append("</td></tr>");
+				html.append("<tr><td colspan=\"2\"><img src=\"" + ctx.contextPath() + "/upload/" + fileName
+						+ "\" style=\"max-width:100%;\" /></td></tr>");
+				html.append("</table>");
+			}
+			ctx.writeHTML(html);
+		} catch (Exception e) {
+			LogKit.error(null, e);
 		}
-		ctx.writeHTML(html);
 	}
 
 	private StringBuilder getParamsHtml() {
