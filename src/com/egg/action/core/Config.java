@@ -1,12 +1,11 @@
 package com.egg.action.core;
 
+import com.egg.action.upload.UploadFactory;
+
+import javax.servlet.ServletConfig;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
-
-import javax.servlet.ServletConfig;
-
-import com.egg.action.upload.UploadFactory;
 
 /**
  * 读取ActionServlet的初始化参数
