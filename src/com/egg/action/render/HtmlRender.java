@@ -1,4 +1,4 @@
-package com.egg.render;
+package com.egg.action.render;
 
 public class HtmlRender extends TextRender {
 

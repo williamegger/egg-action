@@ -2,7 +2,7 @@ package com.egg.action.core;
 
 import com.egg.action.upload.UploadFactory;
 
-import javax.servlet.ServletConfig;
+import javax.servlet.FilterConfig;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
@@ -25,7 +25,7 @@ public final class Config {
 	/**
 	 * 初始化配置信息
 	 */
-	protected static void init(ServletConfig config) {
+	protected static void init(FilterConfig config) {
 		Enumeration<String> names = config.getInitParameterNames();
 		String k, v;
 		while (names.hasMoreElements()) {

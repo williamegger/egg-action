@@ -12,8 +12,7 @@ import com.egg.action.upload.FilePart;
 import com.egg.common.log.LogKit;
 import com.egg.common.utils.FileUtil;
 
-@Action("test")
-// @Action(value = "test", isSingle = false)
+@Action("/test")
 public class TestAction {
 
 	private int count;

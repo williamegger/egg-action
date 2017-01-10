@@ -1,4 +1,4 @@
-package com.egg.action.core.handler;
+package com.egg.action.handler;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;

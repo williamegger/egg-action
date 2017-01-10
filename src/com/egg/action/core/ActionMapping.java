@@ -1,9 +1,7 @@
 package com.egg.action.core;
 
-import com.egg.action.core.ActionAnno.Action;
-import com.egg.action.core.handler.ActionHandler;
-import com.egg.action.core.handler.DefaultHandler;
-import com.egg.action.core.handler.Handler;
+import com.egg.action.handler.ActionHandler;
+import com.egg.action.handler.Handler;
 import com.egg.common.log.LogKit;
 import com.egg.common.scan.ScanUtil;
 import com.egg.common.utils.MethodUtil;
@@ -26,8 +24,6 @@ public final class ActionMapping {
      * 扫描Action，并创建Handler
      */
     protected static void init(String scanPackage) {
-        loadDefaultHandler();
-
         Set<Class<?>> actions = scanAction(scanPackage);
         if (actions == null || actions.isEmpty()) {
             return;
@@ -35,9 +31,9 @@ public final class ActionMapping {
 
         Map<String, Class<?>> actionClassMap = new HashMap<String, Class<?>>();
         String url;
-        Action anno;
+        ActionAnno.Action anno;
         for (Class<?> clazz : actions) {
-            anno = clazz.getAnnotation(Action.class);
+            anno = clazz.getAnnotation(ActionAnno.Action.class);
             url = getActionUrl(clazz, anno);
             if (actionClassMap.containsKey(url)) {
                 LogKit.error("加载[" + clazz.getName() + "]时错误，与[" + actionClassMap.get(url).getName() + "]的URL设置重复。");
@@ -56,13 +52,13 @@ public final class ActionMapping {
      * 扫描Action
      * <p>
      * <pre>
-     * 扫描使用{@link com.egg.action.core.ActionAnno.Action Action}注解的类
+     * 扫描使用{@link ActionAnno.Action Action}注解的类
      * </pre>
      */
     private static Set<Class<?>> scanAction(String scanPackage) {
         Set<Class<?>> actionSet = new HashSet<Class<?>>();
         try {
-            List<Class<?>> classList = ScanUtil.scanByAnnotation(scanPackage, Action.class);
+            List<Class<?>> classList = ScanUtil.scanByAnnotation(scanPackage, ActionAnno.Action.class);
             if (classList != null && !classList.isEmpty()) {
                 actionSet.addAll(classList);
             }
@@ -80,7 +76,7 @@ public final class ActionMapping {
      * 2.如果没设置value值，则将类名首字母小写，作为URL
      * </pre>
      */
-    private static String getActionUrl(Class<?> clazz, Action anno) {
+    private static String getActionUrl(Class<?> clazz, ActionAnno.Action anno) {
         String path = "";
 
         if (anno != null) {
@@ -111,7 +107,7 @@ public final class ActionMapping {
      * 2.方法不会包括Object的equals(Object), hashCode(), toString()
      * </pre>
      */
-    private static void loadActionMethods(String path, Class<?> actionClass, Action anno) throws Exception {
+    private static void loadActionMethods(String path, Class<?> actionClass, ActionAnno.Action anno) throws Exception {
         Object single = null;
         if (anno.isSingle()) {
             single = actionClass.newInstance();
@@ -137,10 +133,10 @@ public final class ActionMapping {
 
             if (methodName.equals("index")) {
                 actionHandlerMap.put(path, handler);
-                LogKit.debug("已加载[" + path + "] ---> [" + actionClass.getName() + "." + methodName + "()]");
+                LogKit.info("已加载[" + path + "] ---> [" + actionClass.getName() + "." + methodName + "()]");
             }
-            actionHandlerMap.put(path + method.getName(), handler);
-            LogKit.debug("已加载[" + path + method.getName() + "] ---> [" + actionClass.getName() + "." + methodName + "()]");
+            actionHandlerMap.put(path + method.getName() + "/", handler);
+            LogKit.info("已加载[" + path + method.getName() + "/" + "] ---> [" + actionClass.getName() + "." + methodName + "()]");
         }
     }
 
@@ -153,11 +149,7 @@ public final class ActionMapping {
      */
     public static Handler getActionHandler(HttpServletRequest req) {
         String key = getRequestPath(req);
-        Handler handler = actionHandlerMap.get(key);
-        if (handler == null) {
-            handler = getDefaultHandler();
-        }
-        return handler;
+        return actionHandlerMap.get(key);
     }
 
     /**
@@ -173,24 +165,11 @@ public final class ActionMapping {
         if (index != -1) {
             path = path.substring(0, index);
         }
-        if (path.isEmpty()) {
-            path = "/";
-        }
-//        if (path.length() > 1 && path.indexOf("/") == path.lastIndexOf("/")) {
-//            path += "/index";
-//        }
+        if (!path.endsWith("/")) {
+			path += "/";
+		}
 
         return path;
     }
 
-    // ----------------------
-    // 默认Handler
-    // ----------------------
-    private static void loadDefaultHandler() {
-        actionHandlerMap.put("default", new DefaultHandler());
-    }
-
-    private static Handler getDefaultHandler() {
-        return actionHandlerMap.get("default");
-    }
 }

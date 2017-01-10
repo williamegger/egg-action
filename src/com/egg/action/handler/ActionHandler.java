@@ -1,16 +1,15 @@
-package com.egg.action.core.handler;
-
-import java.lang.reflect.Method;
-import java.lang.reflect.Parameter;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+package com.egg.action.handler;
 
 import com.egg.action.core.ActionAnno.POST;
 import com.egg.action.core.RequestContext;
 import com.egg.action.upload.UploadFactory;
 import com.egg.common.log.LogKit;
 import com.egg.common.utils.MethodUtil;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.lang.reflect.Method;
+import java.lang.reflect.Parameter;
 
 public class ActionHandler implements Handler {
 

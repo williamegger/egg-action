@@ -3,8 +3,8 @@ package com.egg.action.core;
 import com.egg.action.upload.FilePart;
 import com.egg.action.upload.UploadHandler;
 import com.egg.common.log.LogKit;
-import com.egg.render.Render;
-import com.egg.render.RenderFactory;
+import com.egg.action.render.Render;
+import com.egg.action.render.RenderFactory;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;

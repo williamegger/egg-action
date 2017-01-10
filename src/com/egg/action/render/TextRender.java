@@ -1,4 +1,4 @@
-package com.egg.render;
+package com.egg.action.render;
 
 import com.egg.common.log.LogKit;
 

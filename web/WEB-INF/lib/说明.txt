@@ -6,7 +6,6 @@ egg-common-0.1.jar
 
 【上传】
 使用commons-fileupload作为上传处理工具。
-如果使用Servlet3.x提供的方法，则不需要额外jar包。
 ---------------------------------------------------------------------
 commons-fileupload-1.2.2.jar
 commons-io-1.4.jar

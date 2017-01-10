@@ -1,4 +1,4 @@
-package com.egg.render;
+package com.egg.action.render;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;

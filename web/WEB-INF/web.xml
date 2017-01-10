@@ -6,26 +6,26 @@
 
 	<display-name>egg-action</display-name>
 
-	<servlet>
-		<servlet-name>action</servlet-name>
-		<servlet-class>com.egg.action.core.ActionServlet</servlet-class>
-		<!-- 
-		<multipart-config></multipart-config>
-		<init-param>
-			<param-name>uploadHandler</param-name>
-			<param-value>com.egg.action.upload.support.Servlet3UploadHandler</param-value>
-		</init-param>
-		 -->
-		<init-param>
-			<param-name>scanPackage</param-name>
-			<param-value>com.demo</param-value>
-		</init-param>
-		<load-on-startup>1</load-on-startup>
-	</servlet>
-	<servlet-mapping>
-		<servlet-name>action</servlet-name>
-		<url-pattern>/</url-pattern>
-	</servlet-mapping>
+	<!-- Filters -->
+	<filter>
+		<filter-name>Filter</filter-name>
+		<filter-class>com.demo.filter.SomeFilter</filter-class>
+	</filter>
+	<filter-mapping>
+		<filter-name>Filter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+
+	<!-- Action -->
+	<filter>
+		<filter-name>ActionFilter</filter-name>
+		<filter-class>com.demo.filter.MyActionFilter</filter-class>
+	</filter>
+	<filter-mapping>
+		<filter-name>ActionFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+
 
 	<welcome-file-list>
 		<welcome-file>index.html</welcome-file>
