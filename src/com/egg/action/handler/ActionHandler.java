@@ -1,15 +1,15 @@
 package com.egg.action.handler;
 
+import java.lang.reflect.Method;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import com.egg.action.core.ActionAnno.POST;
 import com.egg.action.core.RequestContext;
 import com.egg.action.upload.UploadFactory;
 import com.egg.common.log.LogKit;
 import com.egg.common.utils.MethodUtil;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.lang.reflect.Method;
-import java.lang.reflect.Parameter;
 
 public class ActionHandler implements Handler {
 
@@ -24,7 +24,7 @@ public class ActionHandler implements Handler {
 		this.actionClass = actionClass;
 		this.single = single;
 		this.method = method;
-		methodParamCount = method.getParameterCount();
+		methodParamCount = method.getParameterTypes().length;
 		isMustPOST = method.getAnnotation(POST.class) != null;
 	}
 
@@ -68,10 +68,10 @@ public class ActionHandler implements Handler {
 		if (methodParamCount > 0) {
 			result = new Object[methodParamCount];
 
-			Parameter[] params = method.getParameters();
+			Class<?>[] params = method.getParameterTypes();
 			Class<?> paramClass;
 			for (int i = 0; i < methodParamCount; i++) {
-				paramClass = params[i].getType();
+				paramClass = params[i];
 				if (paramClass == HttpServletRequest.class) {
 					result[i] = req;
 				} else if (paramClass == HttpServletResponse.class) {
