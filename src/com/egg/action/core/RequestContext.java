@@ -312,7 +312,7 @@ public class RequestContext {
 		if (path.length() == 0) {
 			path = "/";
 		}
-		redirect(contextPath());
+		redirect(path);
 	}
 
 	public void goto404() {
