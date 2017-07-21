@@ -313,11 +313,7 @@ public class RequestContext {
 	}
 
 	public void gotoHome() {
-		String path = contextPath();
-		if (path.length() == 0) {
-			path = "/";
-		}
-		redirect(path);
+		redirect("/");
 	}
 
 	public void goto404() {
