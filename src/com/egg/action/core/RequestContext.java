@@ -1,21 +1,26 @@
 package com.egg.action.core;
 
-import com.egg.action.upload.FilePart;
-import com.egg.action.upload.UploadHandler;
-import com.egg.common.log.LogKit;
-import com.egg.action.render.Render;
-import com.egg.action.render.RenderFactory;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
-import java.text.SimpleDateFormat;
-import java.util.*;
+
+import com.egg.action.render.Render;
+import com.egg.action.render.RenderFactory;
+import com.egg.action.upload.FilePart;
+import com.egg.action.upload.UploadHandler;
+import com.egg.common.log.LogKit;
 
 public class RequestContext {
 
@@ -324,6 +329,20 @@ public class RequestContext {
 
 	public void redirect(String uri) {
 		try {
+			if (uri == null || uri.isEmpty()) {
+				uri = "/";
+			}
+			if (!uri.toLowerCase().matches("^http[s]?://\\S+$")) {
+				String path = contextPath();
+				if (path.endsWith("/")) {
+					path = path.substring(0, path.length() - 1);
+				}
+				if (!uri.startsWith("/")) {
+					uri = "/" + uri;
+				}
+
+				uri = path + uri;
+			}
 			resp.sendRedirect(uri);
 		} catch (IOException e) {
 			LogKit.error("redirect方法异常：[" + uri + "]", e);
